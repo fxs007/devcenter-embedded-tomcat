@@ -29,3 +29,18 @@ mvn package
 sh -x ./target/bin/webapp
 curl http://localhost:8080/hello
 ```
+
+# standalone VS embedded
+Bootstrap -> Catalina -> ...
+Tomcat ->                ...
+
+# A tomcat impl - not compliant to servlet spec
+https://github.com/feifa168/mytomcat
+1.启动ServerSocket，封装在MyTomcat中
+2.accept得到Socket client
+3.调用disptach(new MyRequest(client.getInputStream), new MyResponse(client.getOutputStream))
+4.disptch内部根据request的url查询得到对应的servlet包名
+5.调用Class.forName(servletName)得到实际的servlet类
+6.用反射，netInstance或构造函数创建对象 servletObj
+7.servletObj调用service分发请求和应答
+8.service内部根据url中的请求方法判断调用doGet或doPost

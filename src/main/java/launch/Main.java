@@ -5,11 +5,13 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Properties;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.WebResourceSet;
 import org.apache.catalina.core.StandardContext;
+import org.apache.catalina.startup.Bootstrap;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.EmptyResourceSet;
@@ -39,10 +41,20 @@ public class Main {
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
+        Bootstrap.main(new String[0]);
 
-		File root = getRootFolder();
-		System.out.println("project root: " + root);
+        Properties properties = System.getProperties();
+        System.out.println("properties: "+ properties);
+
+        File root = getRootFolder();
+        System.setProperty("org.apache.catalina.startup.EXIT_ON_INIT_FAILURE", "true");
+        Tomcat tomcat = new Tomcat();
+        Path tempPath = Files.createTempDirectory("tomcat-base-dir");
+        tomcat.setBaseDir(tempPath.toString());
+        System.out.println("tomcat base dir: "+ tempPath);
+
+        // How do I config logging
 
 		System.setProperty("org.apache.catalina.startup.EXIT_ON_INIT_FAILURE", "true");
 		Tomcat tomcat = new Tomcat();
